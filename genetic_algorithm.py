@@ -133,20 +133,25 @@ def order_crossover(parent1, parent2, rng=None):
 
     start, end = sorted(rng.sample(range(size), 2))
 
+    
     child = [None]*size
 
     child[start:end+1] = parent1[start:end+1]
+
+    used = set(child[start:end+1])
 
     index = (end+1) % size
 
     for offset in range(size):
         gene = parent2[(end+1+offset) % size]
 
-        if gene not in child:
+        if gene not in used:
             child[index] = gene
+            used.add(gene)
             index = (index+1) % size
 
     return child
+
 
 
 def swap_mutation(individual, mutation_rate=0.1, rng=None):

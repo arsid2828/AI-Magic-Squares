@@ -30,8 +30,10 @@ def solve_backtracking(n, use_mrv=True, use_lcv=False, fixed_cells=None):
         if type(num) is not int or not (1 <= num <= n*n):
             raise ValueError("Invalid fixed value")
 
+        
         if num in used:
-            return None
+            raise ValueError("Duplicate fixed value")
+
 
         square[row][col] = num
         used.add(num)
