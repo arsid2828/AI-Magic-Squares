@@ -6,13 +6,14 @@ def magic_constant(n):
 #verify that a matrix is a magic square
 def is_magic_square(square):
     n=len(square)
-    #check matrix dimension
+    #check if is non-empty and square
     if n==0 or any(len(row)!=n for row in square):
         return False
 
-    #check numbers from 1 to n^2
+    #flatten the matrix in a list of numbers
     numbers=[num for row in square for num in row]
     expected=set(range(1,n**2+1))
+    #reject non-integers and duplicates
     if any(type(num) is not int for num in numbers):
         return False
     if set(numbers) != expected:
