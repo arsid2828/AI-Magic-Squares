@@ -6,7 +6,7 @@ from simulated_annealing import solve_simulated_annealing
 from magic_square import is_magic_square
 
 
-#Test different square sizes and initial configurations
+#test different square sizes and initial configurations
 cases = [
     (3, None),
     (3, {(0, 0): 8, (1, 1): 5, (2, 2): 2}),
@@ -21,7 +21,7 @@ for n, fixed_cells in cases:
     successes = 0
     runs = 10
 
-    #Repeat the experiment with different random seeds
+    #repeat the experiment with different random seeds
     for seed in range(runs):
         start = perf_counter()
 
@@ -35,7 +35,6 @@ for n, fixed_cells in cases:
         times.append(elapsed)
 
         if square is not None:
-            #Check solution validity and fixed cell preservation
             valid = is_magic_square(square)
 
             if fixed_cells is not None:
@@ -49,7 +48,7 @@ for n, fixed_cells in cases:
 
             successes += 1
 
-    #Calculate success rate and median execution time
+    #calculate success rate and median execution time
     success_rate = successes / runs * 100
 
     print(f"Success rate: {success_rate:.1f}%")
