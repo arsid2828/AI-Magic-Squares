@@ -7,12 +7,16 @@ from simulated_annealing import solve_simulated_annealing
 from genetic_algorithm import solve_genetic_algorithm
 from magic_square import is_magic_square
 
+
 cases = [
     ("3x3", 3, {}),
     ("3x3 fixed", 3, {(0, 0): 8, (1, 1): 5, (2, 2): 2}),
     ("4x4", 4, {}),
-    ("4x4 fixed", 4, {(0, 0): 16, (1, 1): 11, (2, 2): 6})
+    ("4x4 fixed", 4, {(0, 0): 16, (1, 1): 11, (2, 2): 6}),
+    ("5x5", 5, {}),
+    ("5x5 fixed", 5, {(0, 0): 17, (2, 2): 13, (4, 4): 9})
 ]
+
 
 algorithms = [
     "CP + Backtracking + MRV",
