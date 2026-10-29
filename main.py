@@ -70,6 +70,15 @@ def main():
         print("N must be a positive integer")
         return
     
+    if n >= 6:
+        confirm = input(
+            "Large squares may take a long time. Continue? (y/n): "
+        ).strip().lower()
+
+        if confirm != "y":
+            print("Execution cancelled")
+            return
+            
     try:
         fixed_cells = read_fixed_cells(n)
     except ValueError as error:
