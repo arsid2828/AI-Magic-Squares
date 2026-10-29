@@ -7,22 +7,22 @@ from magic_square import magic_constant
 #Calculate the total error of all rows, columns and diagonals
 #a cost of zero=a magic square for a valid permutation
 def magic_cost(square):
-    n = len(square)
-    target = magic_constant(n)
+    n=len(square)
+    target=magic_constant(n)
 
     cost = 0
     for row in square:
-        cost += abs(sum(row) - target)
+        cost+=abs(sum(row)-target)
 
     for col in range(n):
-        column_sum = sum(square[row][col] for row in range(n))
-        cost += abs(column_sum - target)
+        column_sum=sum(square[row][col] for row in range(n))
+        cost+=abs(column_sum - target)
 
-    main_diagonal = sum(square[i][i] for i in range(n))
-    secondary_diagonal = sum(square[i][n-1-i] for i in range(n))
+    main_diagonal=sum(square[i][i] for i in range(n))
+    secondary_diagonal=sum(square[i][n-1-i] for i in range(n))
 
-    cost += abs(main_diagonal - target)
-    cost += abs(secondary_diagonal - target)
+    cost+=abs(main_diagonal - target)
+    cost+=abs(secondary_diagonal - target)
 
     return cost
 
@@ -40,7 +40,7 @@ def random_square(n, fixed_cells=None, rng=None):
     used = set()
 
     for position, num in fixed_cells.items():
-        if (not isinstance(position, tuple) or len(position) != 2
+        if (not isinstance(position, tuple) or len(position)!=2
             or any(type(x) is not int for x in position)):
             raise ValueError("Invalid cell position")
 
@@ -139,28 +139,28 @@ def solve_simulated_annealing(n, fixed_cells=None,
     if fixed_cells is None:
         fixed_cells = {}
 
-    rng = random.Random(seed)
-    current = random_square(n, fixed_cells, rng)
-    current_cost = magic_cost(current)
+    rng=random.Random(seed)
+    current=random_square(n, fixed_cells, rng)
+    current_cost=magic_cost(current)
 
-    best = [row[:] for row in current]
-    best_cost = current_cost
+    best=[row[:] for row in current]
+    best_cost=current_cost
 
-    temperature = initial_temperature
+    temperature=initial_temperature
 
     for _ in range(max_iterations):
 
-        if best_cost == 0:
+        if best_cost==0:
             return best
-        if temperature < min_temperature:
+        if temperature<min_temperature:
             break
 
-        neighbor = random_neighbor(current, fixed_cells, rng)
-        neighbor_cost = magic_cost(neighbor)
+        neighbor=random_neighbor(current, fixed_cells, rng)
+        neighbor_cost=magic_cost(neighbor)
 
-        delta = neighbor_cost - current_cost
+        delta = neighbor_cost-current_cost
 
-        if accept_neighbor(delta, temperature, rng):
+        if accept_neighbor(delta,temperature,rng):
             current = neighbor
             current_cost = neighbor_cost
             if current_cost < best_cost:
@@ -169,34 +169,3 @@ def solve_simulated_annealing(n, fixed_cells=None,
         temperature *= cooling_rate
 
     return best if best_cost == 0 else None
-
-
-
-if __name__ == "__main__":
-    from magic_square import print_square, is_magic_square
-
-    fixed_cells = {
-        (0, 0): 8,
-        (1, 1): 5,
-        (2, 2): 2
-    }
-
-    square = solve_simulated_annealing(
-        n=3,
-        fixed_cells=fixed_cells,
-        seed=42
-    )
-
-    if square is not None:
-        print("=== SIMULATED ANNEALING ===")
-        print_square(square)
-        print("Cost:", magic_cost(square))
-        print("Valid:", is_magic_square(square))
-
-        preserved = all(
-            square[row][col] == num
-            for (row, col), num in fixed_cells.items()
-        )
-        print("Fixed cells preserved:", preserved)
-    else:
-        print("No valid solution found")

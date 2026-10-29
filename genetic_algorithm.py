@@ -242,37 +242,3 @@ def solve_genetic_algorithm(n, fixed_cells=None,
         population = new_population
 
     return None
-
-
-
-if __name__ == "__main__":
-    from magic_square import print_square, is_magic_square
-
-    fixed_cells = {
-        (0, 0): 8,
-        (1, 1): 5,
-        (2, 2): 2
-    }
-
-    square = solve_genetic_algorithm(
-        n=3,
-        fixed_cells=fixed_cells,
-        population_size=40,
-        max_generations=1000,
-        mutation_rate=0.2,
-        seed=42
-    )
-
-    if square is not None:
-        print("=== GENETIC ALGORITHM ===")
-        print_square(square)
-        print("Valid:", is_magic_square(square))
-
-        preserved = all(
-            square[row][col] == num
-            for (row, col), num in fixed_cells.items()
-        )
-
-        print("Fixed cells preserved:", preserved)
-    else:
-        print("No valid solution found")
