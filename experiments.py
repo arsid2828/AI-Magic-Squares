@@ -57,7 +57,7 @@ for case_name,n,fixed_cells in cases:
                     square = solve_backtracking(
                         n,
                         use_mrv=True,
-                        use_lcv=(n >= 6),
+                        use_lcv=False,
                         fixed_cells=fixed_cells,
                         time_limit=time_limit
                     )
@@ -98,7 +98,7 @@ for case_name,n,fixed_cells in cases:
         print(f"Timeouts: {timeouts}/{runs}")
         print(f"Time limit: {time_limit:g} s")
         if algorithm == "CP + Backtracking + MRV":
-            print(f"MRV: True, LCV: {n >= 6}")
+            print("MRV: True, LCV: False")
         print(f"Median time (all runs): {median(times):.5f} s")
 
         if successful_times:

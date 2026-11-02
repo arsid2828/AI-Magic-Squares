@@ -93,7 +93,7 @@ def main():
             n,
             fixed_cells=fixed_cells,
             use_mrv=True,
-            use_lcv=(n >= 6)
+            use_lcv=False
         )
 
     elif choice == "2":
