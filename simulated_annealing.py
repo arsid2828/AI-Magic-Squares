@@ -1,6 +1,7 @@
 
 import random
 from math import exp
+from time import perf_counter
 from magic_square import magic_constant
 
 
@@ -125,7 +126,7 @@ def solve_simulated_annealing(n, fixed_cells=None,
                              cooling_rate=0.9995,
                              min_temperature=0.01,
                              max_iterations=50000,
-                             seed=None):
+                             seed=None, time_limit=None):
 
     if initial_temperature <= 0 or min_temperature <= 0:
         raise ValueError("Temperatures must be positive")
@@ -135,6 +136,17 @@ def solve_simulated_annealing(n, fixed_cells=None,
 
     if type(max_iterations) is not int or max_iterations < 0:
         raise ValueError("Invalid maximum iterations")
+
+    deadline = (
+        perf_counter() + time_limit
+        if time_limit is not None else None
+    )
+
+    def check_timeout():
+        if deadline is not None and perf_counter() >= deadline:
+            raise TimeoutError("Simulated Annealing time limit exceeded")
+
+    check_timeout()
 
     if fixed_cells is None:
         fixed_cells = {}
@@ -149,6 +161,7 @@ def solve_simulated_annealing(n, fixed_cells=None,
     temperature=initial_temperature
 
     for _ in range(max_iterations):
+        check_timeout()
 
         if best_cost==0:
             return best
@@ -168,4 +181,5 @@ def solve_simulated_annealing(n, fixed_cells=None,
                 best_cost = current_cost
         temperature *= cooling_rate
 
+    check_timeout()
     return best if best_cost == 0 else None

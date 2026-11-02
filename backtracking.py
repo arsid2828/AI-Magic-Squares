@@ -1,12 +1,22 @@
-
+from time import perf_counter
 from magic_square import magic_constant, is_magic_square
 #solve a NxN magic square using Constraint propagation and backtracking
 #MRV and LCV can be enabled independently
 #fixed cells are optional and cannot be modified by the solver
-def solve_backtracking(n, use_mrv=True, use_lcv=False, fixed_cells=None):
+def solve_backtracking(n, use_mrv=True, use_lcv=False,
+                       fixed_cells=None, time_limit=None):
     if type(n) is not int or n < 1:
         raise ValueError("n must be a positive integer")
     
+    deadline = (
+        perf_counter() + time_limit
+        if time_limit is not None else None
+    )
+
+    def check_timeout():
+        if deadline is not None and perf_counter() >= deadline:
+            raise TimeoutError("Backtracking time limit exceeded")
+
     square = [[0]*n for _ in range(n)]
     used = set()
     target = magic_constant(n)
@@ -79,6 +89,7 @@ def solve_backtracking(n, use_mrv=True, use_lcv=False, fixed_cells=None):
     #compute the domain of every unassigned variable
     #return none if at least one cell has no legal candidates
     def calculate_domains():
+        check_timeout()
         available = [
             num for num in range(1, n*n+1)
             if num not in used
@@ -129,6 +140,7 @@ def solve_backtracking(n, use_mrv=True, use_lcv=False, fixed_cells=None):
         changed = True
 
         while changed:
+            check_timeout()
             changed = False
 
             #propagate singleton domains
@@ -197,6 +209,7 @@ def solve_backtracking(n, use_mrv=True, use_lcv=False, fixed_cells=None):
 
     #explore assignments recursively and backtrack on failure
     def backtrack():
+        check_timeout()
         domains = propagate_domains()
 
         if domains is None:

@@ -90,7 +90,10 @@ def main():
     
     if choice == "1":
         square = solve_backtracking(
-            n, fixed_cells=fixed_cells
+            n,
+            fixed_cells=fixed_cells,
+            use_mrv=True,
+            use_lcv=(n >= 6)
         )
 
     elif choice == "2":

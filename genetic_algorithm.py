@@ -1,5 +1,6 @@
 
 import random
+from time import perf_counter
 from magic_square import magic_constant
 
 
@@ -179,7 +180,7 @@ def solve_genetic_algorithm(n, fixed_cells=None,
                             population_size=40,
                             max_generations=1000,
                             mutation_rate=0.2,
-                            seed=None):
+                            seed=None, time_limit=None):
 
     if type(population_size) is not int or population_size < 2:
         raise ValueError("Population size must be at least 2")
@@ -189,6 +190,17 @@ def solve_genetic_algorithm(n, fixed_cells=None,
 
     if not 0 <= mutation_rate <= 1:
         raise ValueError("Invalid mutation rate")
+
+    deadline = (
+        perf_counter() + time_limit
+        if time_limit is not None else None
+    )
+
+    def check_timeout():
+        if deadline is not None and perf_counter() >= deadline:
+            raise TimeoutError("Genetic Algorithm time limit exceeded")
+
+    check_timeout()
 
     if fixed_cells is None:
         fixed_cells = {}
@@ -200,11 +212,13 @@ def solve_genetic_algorithm(n, fixed_cells=None,
     )
 
     for generation in range(max_generations+1):
+        check_timeout()
 
         weights = [
             fitness(individual, n, fixed_cells)
             for individual in population
         ]
+        check_timeout()
 
         best_index = max(
             range(len(population)),
@@ -222,6 +236,7 @@ def solve_genetic_algorithm(n, fixed_cells=None,
         new_population = [population[best_index][:]]
 
         while len(new_population) < population_size:
+            check_timeout()
 
             parent1 = select_parent(
                 population, n, fixed_cells, rng, weights
